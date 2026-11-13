@@ -25,7 +25,7 @@ Apps that announce themselves on the network show up in DESTINATIONS under FOUND
 
 [Sensors](sensors.md) lists every sensor and its addresses. VIDEO and DEPTH send the camera and its depth as video, over NDI: [NDI](ndi.md).
 
-Ready-made patches and scripts that receive them are in [examples](https://github.com/sky-guntav/SensorLove-iOS/tree/main/examples).
+Ready-made patches and scripts that receive them are in [examples](../examples/README.md).
 
 ## Away from the studio
 

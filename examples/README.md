@@ -11,5 +11,6 @@ On the phone: open DESTINATIONS, tap + ADD, type your computer's IP (PORT stays 
 | [Pure Data](puredata/) | The same sine wave, in vanilla Pd. |
 | [Processing](processing/) | ATTITUDE turns a box, with oscP5. |
 | [Python](python/) | Prints ACCEL, with python-osc. |
+| [VCV Rack](vcvrack/) | Tilting plays a scale: ACCEL's x picks the note through a slew limiter and a quantizer, y the volume. Built by hand, with trowaSoft's cvOSCcv. |
 
 Each README says how far its example has been tried. Every address and what it carries: [Sensors](../docs/sensors.md). How they travel: [OSC](../docs/osc.md).

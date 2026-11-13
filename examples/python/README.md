@@ -4,14 +4,9 @@
 
 ## Play
 
-1. Install python-osc and run the script:
-
-   ```bash
-   pip install python-osc
-   python sensorlove.py
-   ```
-
-2. In SensorLove, add your computer in DESTINATIONS (IP, PORT 9000) and switch it on. Start ACCEL.
+1. Install python-osc: `pip install python-osc`.
+2. Run the script: `python sensorlove.py`.
+3. In SensorLove, add your computer in DESTINATIONS (IP, PORT 9000) and switch it on. Start ACCEL.
 
 For another value, map its address from [Sensors](../../docs/sensors.md): `dispatcher.map('/sensorlove/gyro/x', handler)`.
 

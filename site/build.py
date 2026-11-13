@@ -17,6 +17,7 @@ OUT = ROOT / 'build' / 'site'
 URL = 'https://sensor.love'
 DESCRIPTION = 'A free iPhone app: sensor toys that speak OSC. Motion, touch, face, hands, sound, location, weather and time, live in your own tools.'
 DOCS = {'docs/getting-started.md': 'start', 'docs/sensors.md': 'sensors', 'docs/osc.md': 'osc', 'docs/ndi.md': 'ndi', 'CHANGELOG.md': 'changelog', 'docs/privacy-policy.md': 'privacy'}   # each a page: /start …
+EXAMPLES = ROOT / 'examples'   # the receivers, a page of their own: /examples, each file there to download
 NOT_FOUND = '<section class="lost"><div class="frogbox">{{frog}}</div><h1>NOTHING HERE</h1><p><a href="/">BACK TO SENSORLOVE</a></p></section>'
 BACK = '<header class="back"><a href="/">← SENSORLOVE</a></header>'
 
@@ -185,6 +186,11 @@ def href(t):
     for doc, page in DOCS.items():
         if Path(path).name == Path(doc).name:
             return '/' + page + ('#' + frag if frag else '')
+    folder = path.removesuffix('README.md').rstrip('/').rpartition('/')[2]   # examples/ is the page /examples, its max/ the Max section on it
+    if folder == 'examples':
+        return '/examples/'
+    if folder and (EXAMPLES / folder).is_dir():
+        return '/examples/#' + folder
     fail('a link to %s, which the site does not have' % t)
 
 
@@ -376,6 +382,26 @@ def monitor_html(page):
             .replace('</body>', '<script src="/monitor.js"></script>\n</body>'))
 
 
+# ---------- /examples: examples/README.md, then each example's README in the order its table lists them, with its files ----------
+def examples_page():
+    readme = read('examples/README.md')
+    order = re.findall(r'\]\((\w+)/\)', readme)
+    if sorted(order) != sorted(p.name for p in EXAMPLES.iterdir() if p.is_dir()):
+        fail('examples/README.md lists %s, examples/ holds others: every example needs its row' % order)
+    out = [md(readme, 'examples/README.md')]
+    for name in order:
+        files = sorted(f for f in (EXAMPLES / name).rglob('*') if f.is_file() and f.name != 'README.md')
+        for f in files:
+            (OUT / f.relative_to(ROOT)).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(f, OUT / f.relative_to(ROOT))
+        doc = re.sub(r'^(#{1,3}) ', r'#\1 ', read('examples/%s/README.md' % name), flags=re.M)   # its # Max goes under the page's # Examples
+        page = re.sub(r'(<h[2-4] id=")', r'\g<1>%s-' % name, md(doc, 'examples/%s/README.md' % name))   # each has its Play and Tried: #max-play, not five #play
+        title, _, rest = page.partition('\n')
+        get = ' '.join('<a href="/%s" download>%s ↓</a>' % (f.relative_to(ROOT).as_posix(), f.name) for f in files)
+        out.append('<section id="%s">\n%s\n%s\n%s\n</section>' % (name, title, '<p class="files">%s</p>' % get if files else '', rest))
+    return '\n'.join(out)
+
+
 # ---------- checks on what was built ----------
 def check():
     pages = {f: f.read_text(encoding='utf-8') for f in OUT.rglob('*.html')}
@@ -409,6 +435,7 @@ def selftest(src, osc):
         '<h2 id="two-words">Two words</h2>\n<ul><li>a b</li><li>c</li></ul>\n<p><a href="/sensors#face">s</a></p>'
     assert md('| A | B |\n| --- | --- |\n| `x` | 1 |') == \
         '<div class="table"><table><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td><code>x</code></td><td>1</td></tr></tbody></table></div>'
+    assert md('[a](../examples/README.md) [b](max/)') == '<p><a href="/examples/">a</a> <a href="/examples/#max">b</a></p>'
     for bad, why in (('- a\n  - nested', 'a nested list'), ('> a', 'a quote'), (src.replace('i > 8', 'i > 9'), 'a HAND line it does not know')):
         try:
             read_space(bad, osc) if 'static let space' in bad else md(bad)
@@ -443,6 +470,7 @@ def build():
         text = read(doc)
         title = re.match(r'# (?:SensorLove )?(.+)', text)[1]   # "SensorLove Privacy Policy" → "Privacy Policy · SensorLove"
         pages.append((name + '.html', '%s · SensorLove' % title, URL + '/' + name, 'doc', BACK, '<article class="doc">\n%s\n</article>' % md(text, doc), ''))
+    pages.append(('examples/index.html', 'Examples · SensorLove', URL + '/examples/', 'doc', BACK, '<article class="doc">\n%s\n</article>' % examples_page(), ''))   # index.html: its files sit in examples/ beside it
     for name, title, url, cls, top, main, tail in pages:
         h = template
         theme = '#0a0908' if cls == 'home' else '#c6c0b0'   # the top of the page: the hero's night on the home page (style.css .hero), --bg on the docs
