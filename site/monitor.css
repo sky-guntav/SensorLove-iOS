@@ -1,0 +1,9 @@
+/* The hero is the app as it is, live, in the site's phone (style.css draws the rim, site.js zooms it, monitor.js plays it): the
+   page's browser study with its status bar and home bar, which fills a frame this narrow. A wheel over it scrolls its list, and
+   past the list's ends the site. On a phone a finger scrolls its list too, and past its ends monitor.js moves the site (a page
+   in a frame does not hand the scroll on: the phone fills a phone's screen, and the site would stop). */
+html.demo { color-scheme:light; }   /* the site's own: with another, the browser paints the frame white behind the page */
+html.demo, html.demo body { overflow:hidden; }
+html.demo main { overscroll-behavior:auto; }
+
+html.demo body { -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }

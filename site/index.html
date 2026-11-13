@@ -1,0 +1,74 @@
+<section class="hero">
+  <div class="intro">
+    <h1><span class="brand">SENSORLOVE</span>THIS APP IS <span class="alive">ALIVE</span></h1>
+    <p class="say">Sensor toys that speak OSC. This is the app itself, running here on made-up readings: tap a sensor and its toy wakes up.<span class="mouse"> The motion toys follow your mouse.</span></p>
+    <p class="price"><b>FREE.</b> FOR IPHONE. <a href="https://apps.apple.com/app/sensorlove/id6760937599">GET IT ON THE APP STORE →</a></p>
+    <p class="down"><a href="#experience">PLAY WITH IT BELOW ↓</a></p>
+  </div>
+  <iframe class="monitor" src="/monitor.html" title="SensorLove itself, live"></iframe>
+</section>
+
+
+<section class="free" id="free">
+  <h2 class="giant">FREE.</h2>
+  <p class="big">No ads. No accounts. No tracking. Nothing locked: every sensor, for everyone who makes things with them.</p>
+</section>
+
+<section class="xpwin" id="experience">
+  <div class="win">
+    <div class="screen" data-stage="door">
+      <canvas class="xp" tabindex="0" role="img" aria-label="SensorLove Experience: a sensor to play with, and what the app does with it. Arrow keys move, space clicks."></canvas>
+      <div class="zone" aria-hidden="true"></div>
+      <div class="start"><h2>SENSORLOVE<br><span>EXPERIENCE</span></h2><button class="try" type="button">TRY</button><p class="ask">TRY ASKS FOR YOUR PHONE'S MOTION.</p><p class="ask mouse">MADE FOR IPHONE: OPEN SENSOR.LOVE ON YOURS AND TILT IT. HERE, THE MOUSE FLIES.</p></div>
+      <div class="osc" aria-hidden="true"><p class="k">YOU, AS OSC</p><pre></pre><p class="n">NOTHING LEAVES THIS PAGE.</p></div>
+      <div class="reader" aria-hidden="true"><i class="rslot"></i><b class="rled"></b><span>SENSORLOVE CARD READER</span><span class="rsay">DROP A CARD IN</span></div>
+      <div class="carts" role="group" aria-label="What to play: drag a card into the reader (with the keyboard, press Enter on it)"><button class="cart" type="button" data-i="0" aria-pressed="false"><b class="cled"></b><span class="cn">PAPER PLANE</span><span class="cs">ATTITUDE</span><canvas aria-hidden="true"></canvas></button></div>
+      <button class="sound" type="button" aria-pressed="true" aria-label="Sound"><svg viewBox="0 0 10 7" aria-hidden="true"><circle cx="4.5" cy="0.5" r=".42"/><circle cx="3.5" cy="1.5" r=".42"/><circle cx="4.5" cy="1.5" r=".42"/><circle cx="0.5" cy="2.5" r=".42"/><circle cx="1.5" cy="2.5" r=".42"/><circle cx="2.5" cy="2.5" r=".42"/><circle cx="3.5" cy="2.5" r=".42"/><circle cx="4.5" cy="2.5" r=".42"/><circle cx="0.5" cy="3.5" r=".42"/><circle cx="1.5" cy="3.5" r=".42"/><circle cx="2.5" cy="3.5" r=".42"/><circle cx="3.5" cy="3.5" r=".42"/><circle cx="4.5" cy="3.5" r=".42"/><circle cx="0.5" cy="4.5" r=".42"/><circle cx="1.5" cy="4.5" r=".42"/><circle cx="2.5" cy="4.5" r=".42"/><circle cx="3.5" cy="4.5" r=".42"/><circle cx="4.5" cy="4.5" r=".42"/><circle cx="3.5" cy="5.5" r=".42"/><circle cx="4.5" cy="5.5" r=".42"/><circle cx="4.5" cy="6.5" r=".42"/><g class="w"><circle cx="6.5" cy="2.5" r=".42"/><circle cx="7.5" cy="3.5" r=".42"/><circle cx="6.5" cy="4.5" r=".42"/><circle cx="8.5" cy="1.5" r=".42"/><circle cx="9.5" cy="2.5" r=".42"/><circle cx="9.5" cy="3.5" r=".42"/><circle cx="9.5" cy="4.5" r=".42"/><circle cx="8.5" cy="5.5" r=".42"/></g><g class="x"><circle cx="6.5" cy="2.5" r=".42"/><circle cx="8.5" cy="2.5" r=".42"/><circle cx="7.5" cy="3.5" r=".42"/><circle cx="6.5" cy="4.5" r=".42"/><circle cx="8.5" cy="4.5" r=".42"/></g></svg></button>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="how">
+  <h2>HOW IT WORKS</h2>
+  <ol class="steps">
+    <li><span class="n">01</span><span>Switch a sensor on. Its toy wakes up and plays with what it reads.</span></li>
+    <li><span class="n">02</span><span>Add your computer: its address on the Wi-Fi, port 9000.</span></li>
+    <li><span class="n">03</span><span>Every value arrives as OSC, on its own address: <code class="out">/sensorlove/accel/x</code></span></li>
+  </ol>
+  <p class="more"><a href="/start">GET STARTED →</a> <a href="/osc">HOW THE VALUES TRAVEL →</a></p>
+</section>
+
+<section class="sensors" id="sensors">
+  <h2>{{count}} SENSORS</h2>
+  <ul class="names">{{sensors}}</ul>
+  <p class="more"><a href="/sensors">EVERY SENSOR, EVERY ADDRESS →</a></p>
+</section>
+
+<section class="support" id="support">
+  {{garden}}
+  <div class="wiz">{{wizard}}<p class="bubble">KEEP IT FREE</p></div>
+  <div>
+    <h2>SUPPORT ME</h2>
+    <p>I'm a student, saving for a master's degree, and I make SensorLove in my own time. It's free, with nothing locked.</p>
+    <p>If it is part of your work, you can support mine on GitHub: it pays for new sensors and every fix.</p>
+    <p class="more"><a href="https://github.com/sponsors/sky-guntav">SPONSOR MY WORK ON GITHUB →</a></p>
+  </div>
+</section>
+<script src="/gsap.min.js" defer></script>
+
+<section class="contact">
+  <div id="work">
+    <h2>WORK WITH ME</h2>
+    <p>Workshops on sensors and OSC, installations, commissions: custom sensors, apps and setups for stage and exhibition.</p>
+  </div>
+  <div id="help">
+    <h2>HELP</h2>
+    <p>A question, an idea, a bug.</p>
+  </div>
+  <p class="mail"><a href="mailto:hello@sensor.love">hello@sensor.love</a></p>
+</section>
+<!-- end -->
+<div class="ps">
+  <p class="first"><svg class="flag" viewBox="0 0 12 6" aria-hidden="true"><path class="k" d="M0 0h12v2H0z"/><path class="w" d="M0 2h12v2H0z"/><path class="g" d="M0 4h12v2H0z"/><path class="r" d="M0 0h1v6H0zM1 1h1v4H1zM2 2h1v2H2z"/></svg>FREE PALESTINE</p>
+  <p>FREE SUDAN · FREE ROHINGYA · FREE UYGHURS</p>
+</div>

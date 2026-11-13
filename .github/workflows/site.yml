@@ -1,0 +1,38 @@
+# sensor.love: site/build.py builds the site from the docs and the app, GitHub Pages serves it. Runs on main when the site, the
+# docs or what the docs are written from changes; also by hand (Actions › site › Run workflow).
+name: site
+on:
+  push:
+    branches: [main]
+    paths:
+      - site/**
+      - docs/**
+      - CHANGELOG.md
+      - App/Sender.swift
+      - App/OSC.swift
+      - WebUI/home.html
+      - WebUI/fonts/**
+      - App/Assets.xcassets/AppIcon.appiconset/**
+      - .github/workflows/site.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false   # a deploy under way finishes; the next one waits
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+      - run: python3 site/build.py   # stops if docs/sensors.md no longer matches what the app sends
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: build/site
+      - id: deploy
+        uses: actions/deploy-pages@v5

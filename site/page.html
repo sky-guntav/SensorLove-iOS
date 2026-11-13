@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com; connect-src 'self' https://www.googletagmanager.com https://*.google-analytics.com https://*.google.com; img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="{{theme}}">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<link rel="canonical" href="{{url}}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SensorLove">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:url" content="{{url}}">
+<meta property="og:image" content="https://sensor.love/share.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="/icon.png">
+<link rel="apple-touch-icon" href="/icon.png">
+<link rel="preload" href="/fonts/DepartureMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<script src="/dt.js"></script>
+<link rel="stylesheet" href="/style.css">
+<script src="/site.js" defer></script>
+<script src="/xp.js" defer></script>
+<script src="/count.js" defer></script>
+</head>
+<body class="{{class}}">
+{{top}}
+<main>
+{{body}}
+</main>
+<footer>
+  <nav aria-label="Pages"><a href="/start">START</a><a href="/sensors">SENSORS</a><a href="/osc">OSC</a><a href="/ndi">NDI</a><a href="/changelog">CHANGELOG</a><a href="/privacy">PRIVACY</a></nav>
+  <div class="made">
+    <p>© 2026 sensor.love · Made by Göktuğ Güntav</p>
+    <p><a href="https://open-meteo.com/">Weather data by Open-Meteo.com</a> · Departure Mono by Helena Zhang, <a href="/fonts/OFL.txt">SIL Open Font License 1.1</a></p>
+  </div>
+{{end}}
+</footer>
+</body>
+</html>

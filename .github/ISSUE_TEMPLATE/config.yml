@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: How to use SensorLove
+    url: https://sensor.love/start
+    about: Getting started, every sensor and every OSC address.
+  - name: Anything else
+    url: https://sensor.love
+    about: Write to hello@sensor.love about privacy, work together, or anything that is not a bug or an idea.

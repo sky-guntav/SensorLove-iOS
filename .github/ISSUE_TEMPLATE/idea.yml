@@ -1,0 +1,11 @@
+name: An idea
+description: Something SensorLove could do.
+labels: [idea]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to make?
+      description: The thing you want to make tells more than the feature. Which sensor, and which app takes it?
+    validations:
+      required: true

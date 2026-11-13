@@ -1,0 +1,86 @@
+# The Xcode project is generated from this file (xcodegen generate, by ci_scripts/ci_post_clone.sh on Xcode Cloud); it is not kept in the repo.
+name: SensorLove
+options:
+  deploymentTarget:
+    iOS: "18.2"
+settings:
+  base:
+    DEVELOPMENT_TEAM: BNQTTX5CD8
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "${BUILD_NUMBER}"   # Xcode Cloud's (ci_post_clone.sh passes CI_BUILD_NUMBER): TestFlight wants a new one for every upload
+    SWIFT_VERSION: "5.0"
+targets:
+  SensorLove:
+    type: application
+    platform: iOS
+    sources:
+      - path: App
+      - path: WebUI                              # the interface, copied in as a folder: home.html beside fonts/
+        type: folder
+      - path: Models                             # DEPTH's DETAIL model, fetched by ci_post_clone.sh; Xcode compiles it in. Absent: no DETAIL
+        optional: true
+    info:
+      path: Info.plist                           # written by xcodegen
+      properties:
+        CFBundleDisplayName: SensorLove
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSRequiresIPhoneOS: true
+        ITSAppUsesNonExemptEncryption: false
+        NSLocalNetworkUsageDescription: "SensorLove finds the OSC apps on your local network and sends your sensors' data to the ones you add, like TouchDesigner, Max or Unreal. With VIDEO or DEPTH on, it shows the camera there as an NDI source."
+        NSBonjourServices:                         # DESTINATIONS finds these (Finder.swift): OSC receivers, and OSCQuery servers; NDI's, for VIDEO and DEPTH
+          - _osc._udp
+          - _oscjson._tcp
+          - _ndi._tcp
+          - _ndi._udp
+        NSMotionUsageDescription: "SensorLove reads the barometer to send air pressure and how far you went up or down."
+        NSLocationWhenInUseUsageDescription: "SensorLove sends where you are and how fast you move to your apps, while LOCATION is on."
+        NSMicrophoneUsageDescription: "SensorLove sends how loud it is around the phone to your apps. With VIDEO's AUDIO on, it sends the sound too, as NDI, to the apps on your local network that ask for it. Nothing is recorded or kept."
+        NSCameraUsageDescription: "SensorLove reads your face and hands with the camera and sends their movement to your apps. With VIDEO or DEPTH on, it sends the picture and depth too, as NDI, to the apps on your local network that ask for it. Nothing is recorded or kept."
+        UIBackgroundModes:                         # IN BACKGROUND: silence keeps SensorLove awake off the screen; LOCATION goes on there
+          - audio
+          - location
+        UIFileSharingEnabled: true                 # REC's takes (Documents) show in the Files app, in SensorLove
+        LSSupportsOpeningDocumentsInPlace: true
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.skyfly.SensorLove
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "1"              # iPhone only; on the target, as XcodeGen's iOS preset puts "1,2" there (over project settings)
+        # NDI (VIDEO, DEPTH): set by ci_scripts/ci_post_clone.sh when it fetched NDI's SDK into Vendor/NDI; empty, the app builds
+        # without it (#if NDI). Linked for the phone only: the simulator (tests) has no NDI library
+        SWIFT_OBJC_BRIDGING_HEADER: "${NDI_BRIDGE}"
+        HEADER_SEARCH_PATHS: "$(inherited) ${NDI_INCLUDE}"
+        "OTHER_LDFLAGS[sdk=iphoneos*]": "$(inherited) ${NDI_LDFLAGS}"
+        "SWIFT_ACTIVE_COMPILATION_CONDITIONS[sdk=iphoneos*]": "$(inherited) ${NDI_FLAG}"
+  SensorLoveTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests
+    dependencies:
+      - target: SensorLove                       # XcodeGen makes it the test host
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.skyfly.SensorLove.Tests
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  SensorLove:
+    build:
+      targets:
+        SensorLove: all
+        SensorLoveTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - SensorLoveTests
+    archive:
+      config: Release

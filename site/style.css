@@ -1,0 +1,253 @@
+/* sensor.love wears the app's look (WebUI/home.html), in its light theme: Departure Mono on its 11 px grid (sizes in its multiples:
+   22 to read, 44 / 88 / 176 to shout), ink on the app's light ground; the home page on paper white, its bands on red (FREE),
+   the app's dark (the experience) and green (SUPPORT ME's garden). Otherwise red only where data is going out. --dim is
+   decoration only, never words to read. Outside this, only the garden's colours and the Palestinian flag's, with its words,
+   at the bottom. */
+@font-face { font-family:"Departure Mono"; src:url("/fonts/DepartureMono-Regular.woff2") format("woff2"); font-display:swap; }
+:root { --bg:#c6c0b0; --tile:#c1bbab; --line:#b0a998; --grain:#b9b2a1; --fg:#2b2722; --mid:#524c42; --dim:#8a8477; --faint:#5c564a; --lit:#14120f; --accent:#e0533a;
+  --paper:#e5e0d4; --side:max(22px, 4vw); color-scheme:light; }   /* the app's light theme; --paper a light bone, the home page's ground (page.html's theme-color) */
+
+* { box-sizing:border-box; margin:0; padding:0; }
+html { background:var(--bg); color:var(--fg); font:22px/33px "Departure Mono", ui-monospace, monospace; -webkit-font-smoothing:none; -moz-osx-font-smoothing:grayscale;
+  -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+body { min-height:100vh; background:radial-gradient(circle at 2px 2px, var(--grain) .95px, transparent 1.2px) 0 0 / 4px 4px; }   /* the app's unlit dots */
+html:has(> body.home) { --grain:#d8d2c5; background:radial-gradient(circle at 2px 2px, var(--grain) .95px, transparent 1.2px) 0 0 / 4px 4px, var(--paper); }   /* the unlit dots, faint on the bone: on the root, so site.js's canvas (.ground) can gather them round the mouse over it */
+.ground { position:absolute; left:0; top:0; width:100%; z-index:-1; pointer-events:none; }   /* site.js's water: on the page, a window high, moved down it as it scrolls; sized here, as a canvas left to itself takes its pixels' size (too big at 125 or 150 %) */
+.ctx { position:fixed; z-index:1000; display:grid; padding:11px 0; background:var(--paper); border:2px solid var(--lit); font-size:22px; line-height:33px; animation:ctx .16s steps(4) both; }   /* site.js: the pages, where the page was right-clicked; it opens out of that point in four steps */
+@keyframes ctx { from { clip-path:inset(0 100% 100% 0); } }
+.ctx:focus { outline:none; }
+.ctx a { padding:0 22px; color:var(--fg); text-decoration:none; }
+.ctx a:hover, .ctx a:focus-visible { background:var(--lit); color:var(--paper); outline:none; }
+.wipe { position:fixed; left:0; top:0; z-index:1001; pointer-events:none; image-rendering:pixelated; }   /* site.js: a page's dithered ink, in and out; a pixel a 4 px cell */
+html.dt body::before { content:""; position:fixed; inset:0; z-index:1000; background:var(--lit); animation:dt 0s 2s forwards; }   /* dt.js: dark until site.js opens it; were it never to, gone in 2 s */
+@keyframes dt { to { visibility:hidden; } }
+body.home { background:none; touch-action:pan-x pan-y; --side:max(22px, 4vw, 30vw - 375px); }   /* an app on a phone: no pinch, no double-tap zoom (site.js stops Safari's pinch; the docs still zoom); on a wider screen than 1440 its sides grow a third as fast as the screen, its bands still edge to edge */
+a { color:inherit; text-decoration:underline dotted 2px; text-underline-offset:6px; }
+a:hover { color:var(--lit); }
+:focus-visible { outline:2px solid var(--mid); outline-offset:4px; }
+h1, h2, h3 { font-weight:normal; }
+strong, b { font-weight:normal; color:var(--lit); }
+code { font:inherit; color:var(--lit); overflow-wrap:anywhere; }   /* a long address breaks where it must; in a table it keeps its line (nowrap) */
+
+/* the hero: the app itself, alive (monitor.html in the page's own phone, zoomed to fit by site.js), and its name */
+.hero { display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:44px 88px; align-items:center; min-height:100svh; padding:66px var(--side); }
+.hero h1 { font-size:88px; line-height:88px; }
+.hero .alive { display:inline-block; }   /* site.js beats it like a heart */
+/* the hero is night, the app's dark theme, until a double click in it turns it to day (site.js .day; the page under it never
+   changes). Its ground is its own, under the water's canvas (z-index -2: the hero makes no stacking context); its words take no
+   selection, so a double click selects nothing */
+.hero { position:relative; color:var(--fg); -webkit-user-select:none; user-select:none;
+  --bg:#0a0908; --tile:#0f0e0c; --line:#23211d; --grain:#1a1916; --fg:#d6cebd; --mid:#9a9384; --dim:#514c44; --faint:#807868; --lit:#e2dacb; --paper:#0a0908; }
+.hero.day { --bg:#c6c0b0; --tile:#c1bbab; --line:#b0a998; --grain:#d8d2c5; --fg:#2b2722; --mid:#524c42; --dim:#8a8477; --faint:#5c564a; --lit:#14120f; --paper:#e5e0d4; }
+.hero::before { content:""; position:absolute; inset:0; z-index:-2; background:radial-gradient(circle at 2px 2px, var(--grain) .95px, transparent 1.2px) 0 0 / 4px 4px, var(--paper); }
+.hero:not(.day) .alive { color:var(--accent); }
+.hero:not(.day) .monitor { box-shadow:0 0 0 11px var(--line); }   /* the phone's rim, a step off the dark */
+.note { position:fixed; z-index:999; pointer-events:none; font-size:11px; line-height:16.5px; color:var(--faint); white-space:pre; }   /* site.js: at the mouse in the hero, what a right and a double click do */
+.note[hidden] { display:none; }
+.hero .brand { display:block; font-size:16.5px; line-height:22px; color:var(--faint); margin-bottom:22px; }
+.hero .say { font-size:22px; line-height:33px; max-width:30em; margin-top:33px; }
+.hero .price { margin-top:22px; color:var(--faint); }
+.hero .price a { color:var(--fg); white-space:nowrap; }   /* the store link is the hero's way out: not faint */
+.hero .down { margin-top:44px; }
+.monitor { display:block; width:390px; height:844px; border:0; border-radius:44px; margin:11px; box-shadow:0 0 0 11px var(--lit); }   /* a phone's dark rim on the light ground */
+
+/* SENSORLOVE EXPERIENCE (site/xp.js): the whole screen, dark; in it the game, its one line at the top, the sound in its corner,
+   the console and the cards to play, cut like the app's sensor cards (WebUI/home.html .tile: the corner off, a notch on the side, an LED red on the one
+   playing). Dragged, a card brings up the card reader; dropped in its slot, it loads */
+.win { height:100svh; min-height:560px; display:flex; flex-direction:column; background:var(--bg); color:var(--fg);
+  --bg:#0a0908; --tile:#0f0e0c; --line:#23211d; --grain:#1a1916; --fg:#d6cebd; --mid:#9a9384; --dim:#514c44; --faint:#807868; --lit:#e2dacb; }   /* night: the app's dark theme, for the window only */
+.win { -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent; }   /* a long press plays: no copy, no callout */
+.screen { position:relative; flex:1; min-height:0; overflow:hidden; }
+.start { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:33px; padding:0 var(--side); text-align:center; }   /* the door: its name and TRY; the cards come only after it */
+.start[hidden] { display:none; }
+.start h2 { font-size:66px; line-height:66px; margin:0; color:var(--lit); }
+.start h2 span { color:var(--accent); }   /* EXPERIENCE in red, as ALIVE is in the hero */
+.try { font:inherit; font-size:22px; line-height:33px; color:var(--lit); background:none; border:2px solid var(--lit); padding:11px 66px; cursor:pointer; }
+.try:hover, .try:focus-visible { background:var(--lit); color:var(--bg); outline:none; }
+.ask { font-size:11px; line-height:16.5px; color:var(--faint); }
+@media (pointer:fine) { .ask:not(.mouse) { display:none; } }   /* only a phone asks; a mouse is told it is made for one */
+.xp { position:absolute; inset:0; width:100%; height:100%; display:block; outline:none; touch-action:pan-y; }   /* a finger across plays, up and down still scrolls the page */
+.xp:focus-visible { box-shadow:inset 0 0 0 2px var(--mid); }
+.zone { position:absolute; display:none; touch-action:none; }   /* where a finger plays (a record, the hall): no scrolling starts there (xp.js places it) */
+.osc { position:absolute; left:var(--side); bottom:128px; font-size:11px; line-height:16.5px; color:var(--mid); pointer-events:none; }
+.osc .k { color:var(--fg); margin-bottom:6px; }
+.osc pre { font:inherit; min-height:4lh; padding:0; background:none; border:0; }
+.osc .n { color:var(--faint); margin-top:6px; }
+.sound { position:absolute; top:30px; right:calc(var(--side) - 7px); z-index:3; width:44px; height:44px; display:grid; place-items:center; padding:0; border:0; background:none; color:var(--mid); cursor:pointer; }   /* a speaker in dots: waves while it sounds, a cross when it does not */
+.sound svg { width:30px; height:21px; fill:currentColor; }
+.sound[aria-pressed="true"] { color:var(--lit); }
+.sound[aria-pressed="true"] .x, .sound[aria-pressed="false"] .w { display:none; }
+.sound:focus-visible { outline:2px solid var(--mid); outline-offset:-4px; }
+.reader { position:absolute; left:50%; top:44%; width:280px; height:150px; margin:-75px 0 0 -140px; border:2px dashed var(--mid); border-radius:16px; background:var(--bg);
+  opacity:0; translate:0 40px; pointer-events:none; transition:opacity .2s, translate .3s cubic-bezier(.2,.7,.2,1), border-color .15s; }
+.reader.show { opacity:1; translate:0 0; }
+.reader.hot { border-color:var(--accent); }
+.rslot { position:absolute; left:44px; right:44px; top:26px; height:14px; border:2px solid var(--fg); border-radius:3px; }   /* the slot the card goes into */
+.rled { position:absolute; right:22px; bottom:22px; width:8px; height:8px; background:var(--dim); }
+.reader.hot .rled { background:var(--accent); }
+.reader span { position:absolute; left:22px; bottom:38px; font-size:11px; line-height:14px; color:var(--faint); }
+.reader .rsay { bottom:20px; color:var(--fg); }
+.carts { position:absolute; left:0; right:0; bottom:22px; display:flex; gap:16px; padding:30px var(--side) 0; overflow-x:auto; overscroll-behavior-x:contain; scroll-snap-type:x proximity; scrollbar-width:none; pointer-events:none; transition:opacity .3s; }   /* a row along the bottom; on a phone it scrolls sideways */
+.carts::-webkit-scrollbar { display:none; }
+.carts > .cart:first-child { margin-left:auto; }   /* in the middle while they fit, from the start once they scroll */
+.carts > .cart:last-child { margin-right:auto; }
+.screen[data-stage="pick"] .carts { top:calc(30% + 92px); bottom:auto; flex-wrap:wrap; justify-content:center; row-gap:16px; overflow:visible; padding-top:0; max-width:calc(4 * 128px + 3 * 16px + 2 * var(--side)); margin:0 auto; animation:rise .45s cubic-bezier(.2,.7,.2,1); }   /* choosing: in the middle, under the reader */
+.screen[data-stage="pick"] .carts > .cart { margin:0; touch-action:none; }
+.screen[data-stage="pick"] .reader { top:30%; }
+.screen[data-stage="connect"] .carts { opacity:0; }
+.screen[data-stage="connect"] .cart { pointer-events:none; }
+.screen[data-stage="door"] .osc, .screen[data-stage="pick"] .osc, .screen[data-stage="door"] .carts { display:none; }
+@keyframes rise { from { opacity:0; translate:0 30px; } }
+.cart { --n:12px; pointer-events:auto; position:relative; width:128px; height:84px; padding:0; border:0; font:inherit; color:inherit; text-align:left; cursor:grab; touch-action:pan-x; flex:none; scroll-snap-align:center; background:var(--line);
+  clip-path:polygon(0 0,calc(100% - var(--n)) 0,100% var(--n),100% 100%,0 100%,0 40px,4px 40px,4px 28px,0 28px); transition:translate .25s cubic-bezier(.2,.7,.2,1), transform .25s cubic-bezier(.2,.7,.2,1), background .2s, opacity .2s; }
+.cart::before { content:""; position:absolute; inset:2px; background:var(--tile); clip-path:polygon(0 0,calc(100% - var(--n)) 0,100% var(--n),100% 100%,0 100%,0 38px,2px 38px,2px 24px,0 24px); }
+.cart > * { position:relative; }
+.cart .cn { position:absolute; left:12px; top:9px; font-size:11px; line-height:14px; color:var(--fg); }
+.cart .cs { position:absolute; left:12px; top:23px; font-size:11px; line-height:14px; color:var(--faint); }
+.cart canvas { position:absolute; left:12px; bottom:9px; width:96px; height:28px; }
+.cart .cled { position:absolute; right:16px; top:11px; width:7px; height:7px; background:var(--dim); }
+.cart:hover { background:var(--dim); }
+.cart[aria-pressed="true"] { background:color-mix(in srgb, var(--accent) 60%, var(--tile)); translate:0 -8px; }   /* the one playing */
+.cart[aria-pressed="true"] .cled { background:var(--accent); }
+.cart.going { animation:insert .5s cubic-bezier(.2,.7,.2,1); }
+@keyframes insert { 40% { translate:0 -26px; } 100% { translate:0 -8px; } }
+.cart.ghost { position:fixed; z-index:20; margin:0; pointer-events:none; transition:none; translate:none; cursor:grabbing; }   /* the card in the hand: a copy, out of the row */
+.cart.ghost.back { transition:transform .25s cubic-bezier(.2,.7,.2,1); }
+.cart.ghost.into { transition:transform .35s ease-in, opacity .35s ease-in; opacity:0; }   /* down into the slot */
+.cart.lifted { opacity:0; }
+.cart:focus-visible { outline:2px solid var(--mid); outline-offset:3px; }
+.sr { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+
+/* the rest of the page: big words, one idea a section */
+main > section:not(.hero) { padding:110px var(--side); }
+main > section.xpwin { padding:0; }
+main > section.free { background:var(--accent); color:var(--lit); }   /* the price, on red */
+section h2 { font-size:44px; line-height:55px; margin-bottom:44px; }
+main > section p { max-width:36em; }
+p + p { margin-top:22px; }
+.giant { font-size:176px; line-height:176px; margin-bottom:44px; }
+.big { font-size:44px; line-height:55px; max-width:24em; }
+.steps { list-style:none; display:grid; gap:33px; max-width:44em; }
+.steps li { display:grid; grid-template-columns:3ch 1fr; gap:22px; align-items:baseline; }
+.steps .n { font-size:44px; color:var(--faint); }
+.out { color:var(--lit); overflow-wrap:anywhere; }   /* a value on its way out: red dots run into it (red text would not read on paper) */
+.out::before { content:""; display:inline-block; width:22px; height:2px; margin:0 11px 6px 0; background:linear-gradient(90deg, var(--accent) 2px, transparent 2px) 0 0 / 6px 2px; animation:flow .5s steps(3) infinite; }
+@keyframes flow { to { background-position:6px 0; } }
+.more { margin-top:44px; }
+.more a { display:inline-block; margin:0 33px 11px 0; }
+.names { list-style:none; display:grid; grid-template-columns:repeat(auto-fill, minmax(11em, 1fr)); gap:11px 44px; }
+.contact { display:grid; grid-template-columns:1fr 1fr; gap:22px 88px; }   /* work and help side by side, small; under them the one address for both, large */
+.contact h2 { font-size:22px; line-height:33px; margin-bottom:11px; color:var(--lit); }
+.contact .mail { grid-column:1 / -1; margin-top:44px; font-size:88px; line-height:88px; max-width:none; }
+.contact .mail a { text-decoration-thickness:4px; text-underline-offset:16px; }
+
+/* SUPPORT ME: the wizard waters his garden, HELLO's firs and flowers along the section's foot, in colour (build.py draws both) */
+main > section.support { --ground:#d9e8c4; --dot:20px; position:relative; overflow:hidden; padding-bottom:var(--dot); background:var(--ground); }
+.support { display:grid; grid-template-columns:auto 1fr; gap:44px 88px; align-items:center; }
+.support > :last-child { margin-bottom:calc(16 * var(--dot)); }   /* the words over the garden */
+.garden { position:absolute; left:calc(var(--side) - 70 * var(--dot)); bottom:0; height:calc(16 * var(--dot)); }   /* the wizard's dots: its plants stand in his row, his spot 70 dots in (build.py WIZ_AT) */
+.wiz { position:relative; width:calc(28 * var(--dot)); padding-top:66px; align-self:end; }   /* he stands in his garden, his bubble beside his hat */
+main > section.support h2 { font-size:88px; line-height:88px; }
+.wizard { display:block; height:calc(18 * var(--dot)); }
+.wizard path, .garden path { fill:none; stroke-width:.72; stroke-linecap:round; }
+.garden .plant > g:not(:last-child) { visibility:hidden; }   /* grown; site.js has GSAP grow it through these stages */
+.wizard .lit, .wizard .eyes { stroke:var(--fg); }
+.wizard .shade { stroke:var(--dim); }
+.wizard .eyes { animation:blink 5s steps(1) infinite; }
+@keyframes blink { 96% { opacity:1; } 97%, 100% { opacity:0; } }
+.wizard .him { animation:bob 1.2s steps(1) infinite; }   /* a dot up and back down: he waters, never still */
+@keyframes bob { 50% { transform:translateY(-1px); } }
+.wizard .bud > g { visibility:hidden; animation:grow 8s steps(1) infinite; }   /* under his can the flower grows, a shoot, two leaves, a bud, the flower, 2 s each, and again */
+.wizard .bud > g:nth-child(2) { animation-delay:2s; }
+.wizard .bud > g:nth-child(3) { animation-delay:4s; }
+.wizard .bud > g:nth-child(4) { animation-delay:6s; }
+@keyframes grow { 0% { visibility:visible; } 25%, 100% { visibility:hidden; } }
+.wizard .drop { stroke:#3d9be9; animation:drip .8s steps(2) infinite, rain 8s steps(1) infinite; }   /* no water while it flowers */
+@keyframes drip { to { transform:translateY(2px); } }
+@keyframes rain { 75%, 100% { visibility:hidden; } }
+.support .leaf { stroke:#5c9e45; } .support .pine { stroke:#2c6a3c; } .support .bark { stroke:#8a5a3c; }
+.support .p0 { stroke:#e8579a; } .support .p1 { stroke:#f28a1e; } .support .p2 { stroke:#8a5cd6; } .support .p3 { stroke:#e0a400; } .support .p4 { stroke:#3d9be9; } .support .p5 { stroke:#d6336c; }
+.bubble { position:absolute; left:calc(11 * var(--dot)); top:0; padding:6px 16px; white-space:nowrap; border:3px dotted var(--fg); border-radius:16px; background:var(--ground); }
+
+footer { display:flex; flex-wrap:wrap; align-items:flex-start; gap:22px 88px; padding:66px var(--side);
+  color:var(--faint); font-size:16.5px; line-height:27px; }   /* no rule over it: the pages, who made it, the messages, side by side; what has no room goes under */
+footer nav { display:grid; font-size:22px; line-height:33px; }   /* the pages, a column */
+footer .made { flex:1 1 22em; min-width:0; }   /* who made it takes the room left; the messages go under it when there is none */
+footer .made p + p { margin-top:11px; }
+footer .ps { margin:0; }
+footer nav a { color:var(--mid); text-decoration:none; }
+.ps { margin-top:44px; color:var(--mid); }
+.ps .first { color:var(--fg); }
+.flag { display:inline-block; width:24px; height:12px; vertical-align:0; margin-right:11px; shape-rendering:crispEdges; }
+.flag .k { fill:#000; } .flag .w { fill:#fff; } .flag .g { fill:#149954; } .flag .r { fill:#e4312b; }
+
+/* the docs: one page each, from docs/*.md (GitHub shows the same files) */
+header.back { padding:22px var(--side); border-bottom:2px solid var(--line); }
+header.back a { color:var(--mid); text-decoration:none; }
+body.doc { --side:max(22px, 4vw, 50vw - 440px); }   /* a doc keeps to a middle 880 px on a wide screen, its back link and footer with it */
+article.doc { padding:44px var(--side) 88px; }
+.doc h1 { font-size:44px; line-height:55px; margin-bottom:44px; }
+.doc h2 { font-size:33px; line-height:44px; margin:66px 0 22px; }
+.doc h3 { font-size:22px; color:var(--lit); margin:44px 0 11px; }
+.doc p, .doc ul, .doc ol, .doc pre, .doc details, .doc .table { margin-bottom:22px; }
+.doc ul, .doc ol { padding-left:2ch; }
+.doc li { margin-bottom:8px; }
+li::marker { color:var(--faint); }
+pre { padding:22px; overflow-x:auto; background:var(--tile); border:2px solid var(--line); }
+.table { overflow-x:auto; }
+table { border-collapse:collapse; font-size:16.5px; line-height:27px; }
+th { text-align:left; font-weight:normal; color:var(--faint); }
+th, td { padding:4px 33px 4px 0; border-bottom:1px solid var(--line); vertical-align:top; white-space:nowrap; }
+td:last-child { color:var(--mid); padding-right:0; }
+details { background:var(--tile); border:2px solid var(--line); }
+summary { padding:11px 22px; color:var(--mid); cursor:pointer; list-style:none; }
+summary::-webkit-details-marker { display:none; }
+summary::before { content:"+ "; color:var(--faint); }
+details[open] > summary::before { content:"- "; }
+details > .table { margin:0 22px 22px; }
+.lost { padding:110px var(--side); text-align:center; }
+.lost h1 { font-size:44px; line-height:55px; margin:44px 0 22px; }
+.frog { display:block; width:216px; height:128px; margin:0 auto; fill:var(--fg); shape-rendering:crispEdges; }
+
+@media (max-width:999px) {   /* no room beside the phone: the words, then it */
+  main > section.support { --dot:14px; }
+  main > section.support h2 { font-size:66px; line-height:66px; }
+  .hero { grid-template-columns:minmax(0, 1fr); min-height:0; }
+  .monitor { justify-self:center; }
+  .contact .mail { font-size:66px; line-height:66px; }
+}
+@media (pointer:coarse) {   /* a finger plays the app in the phone as on a phone; no mouse to follow */
+  .mouse { display:none; }
+  .carts { pointer-events:auto; }   /* the row of cards scrolls under a finger */
+}
+@media (max-width:760px) {
+  .hero { padding:33px var(--side) 44px; gap:33px; }
+  .hero h1 { font-size:44px; line-height:44px; }
+  .osc { left:12px; bottom:106px; }   /* a phone: the console over the cards */
+  .carts { gap:8px; bottom:14px; }
+  .cart { width:108px; height:76px; }
+  .cart canvas { width:70px; }
+  .cart .cled { top:auto; right:12px; bottom:12px; }   /* by the drawing: the names take the card's width */
+  .reader { width:240px; margin-left:-120px; }
+  .screen[data-stage="pick"] .carts { top:calc(30% + 86px); row-gap:8px; max-width:calc(3 * 108px + 2 * 8px + 2 * var(--side)); }
+  .sound { top:12px; }
+  .start { gap:22px; }
+  .start h2 { font-size:44px; line-height:44px; }
+  .wiz { width:100%; }
+  section h2, .doc h1 { font-size:44px; line-height:55px; }
+  .giant { font-size:88px; line-height:88px; }
+  .big { font-size:22px; line-height:33px; }
+  main > section:not(.hero, .xpwin) { padding:66px var(--side); }   /* the experience stays the whole screen, its cards on it */
+  .support, .contact { grid-template-columns:1fr; }
+  main > section.support { --dot:9px; padding-bottom:var(--dot); }   /* smaller, so the garden shows beside him */
+  main > section.support h2 { font-size:44px; line-height:55px; }
+  .support > :last-child { order:-1; margin-bottom:0; }   /* the words, then the wizard in his garden */
+  .contact .mail { margin-top:22px; font-size:33px; line-height:44px; }
+  .contact .mail a { text-decoration-thickness:2px; text-underline-offset:8px; }
+  footer { display:block; }   /* one column: the pages in a row, then the rest */
+  footer nav { display:flex; flex-wrap:wrap; gap:0 33px; margin-bottom:22px; }
+  footer .ps { margin-top:22px; }
+  .doc h2 { font-size:22px; line-height:33px; }
+}
+@media (prefers-reduced-motion: reduce) { .wizard .bud > g:last-child { visibility:visible; } }   /* still: the flower, grown */
+@media (prefers-reduced-motion: reduce) { .out::before, .wizard .eyes, .wizard .drop, .wizard .him, .wizard .bud > g, .cart.going, .ctx { animation:none; } .cart, .reader { transition:none; } }

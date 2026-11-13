@@ -1,0 +1,55 @@
+# DEPTH's DETAIL AI models as Core ML, made by ml/depth_coreml.py. By hand: Actions › depth-coreml › Run workflow. Each model
+# comes out as an artifact of its own, with its report (inputs, outputs, tokens, operations, weights, each file's SHA-256), its
+# MIL program and its test frame. Converted on Linux: coremltools converts there but cannot run a model. With "check", every model
+# then runs once on macOS and is compared with PyTorch's answer for the same frame (a macOS minute counts as 10 of the month's).
+name: depth-coreml
+on:
+  workflow_dispatch:
+    inputs:
+      check:
+        description: Run the models on macOS and compare them with PyTorch (about a minute, counted 10 times)
+        type: boolean
+        default: true
+permissions:
+  contents: read
+jobs:
+  convert:
+    runs-on: ubuntu-24.04   # not -latest: it becomes Ubuntu 26 on 2026-10-19, before setup-python may have this Python for it
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false   # the models do not depend on each other
+      matrix:
+        include:
+          - { model: promptda, size: 518x392 }   # Apple's Depth Anything V2 Small's size: 1,037 tokens
+          - { model: promptda, size: 392x294 }   # 589 tokens: about a third of the attention, half of the rest
+          - { model: dav2, size: 392x294 }
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: pip install torch==2.7.1 --index-url https://download.pytorch.org/whl/cpu   # the CPU build: the default one brings gigabytes of CUDA
+      - run: pip install transformers==5.19.0 coremltools==9.0 pillow   # coremltools 9.0 is tested up to torch 2.7
+      - id: convert
+        run: python ml/depth_coreml.py build/model --model ${{ matrix.model }} --size ${{ matrix.size }}
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.convert.outputs.name }}
+          path: build/model
+  check:
+    if: inputs.check
+    needs: convert
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: pip install coremltools==9.0 pillow
+      - uses: actions/download-artifact@v8
+        with:
+          path: build   # this run's models, each in a folder of its own
+      - run: |
+          for d in build/*/; do python ml/depth_coreml.py "$d" --check || failed=1; done
+          exit ${failed:-0}

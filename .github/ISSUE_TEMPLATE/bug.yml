@@ -1,0 +1,39 @@
+name: Something is wrong
+description: SensorLove does not do what it should.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: And what you expected instead. A screenshot or a screen recording helps.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to make it happen
+      placeholder: |
+        1. Switch on FACE TRACK
+        2. Add a destination
+        3. …
+  - type: input
+    id: version
+    attributes:
+      label: SensorLove version
+      description: SETTINGS › ABOUT shows it.
+      placeholder: 1.0 · BUILD 61
+    validations:
+      required: true
+  - type: input
+    id: phone
+    attributes:
+      label: iPhone and iOS
+      placeholder: iPhone 14 Pro, iOS 18.7
+    validations:
+      required: true
+  - type: input
+    id: receiver
+    attributes:
+      label: Where the data goes
+      description: The app on the computer, and UDP, TCP or JSON.
