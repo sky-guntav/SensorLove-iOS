@@ -1,0 +1,238 @@
+{
+  "version": "2.6.6",
+  "modules": [
+    {
+      "id": 1,
+      "plugin": "trowaSoft",
+      "model": "cvOSCcv",
+      "version": "2.0.9",
+      "params": [],
+      "pos": [
+        0,
+        0
+      ],
+      "data": {
+        "version": 22,
+        "osc": {
+          "IpAddress": "127.0.0.1",
+          "TxPort": 7000,
+          "RxPort": 9000,
+          "Namespace": "",
+          "AutoReconnectAtLoad": true,
+          "Initialized": true,
+          "SendFrequency": 100,
+          "SendChangeSensitivity": 0.05
+        },
+        "numCh": 2,
+        "inputChannels": [
+          {
+            "chNum": 1,
+            "path": "/ch/1",
+            "dataType": 1,
+            "convertVals": 0,
+            "clipVals": 0,
+            "minV": -5.0,
+            "maxV": 5.0,
+            "minOSC": 0.0,
+            "maxOSC": 1.0,
+            "channelSensitivity": 0.05
+          },
+          {
+            "chNum": 2,
+            "path": "/ch/2",
+            "dataType": 1,
+            "convertVals": 0,
+            "clipVals": 0,
+            "minV": -5.0,
+            "maxV": 5.0,
+            "minOSC": 0.0,
+            "maxOSC": 1.0,
+            "channelSensitivity": 0.05
+          }
+        ],
+        "outputChannels": [
+          {
+            "chNum": 1,
+            "path": "/sensorlove/accel/x",
+            "dataType": 1,
+            "convertVals": 0,
+            "clipVals": 0,
+            "minV": -5.0,
+            "maxV": 5.0,
+            "minOSC": 0.0,
+            "maxOSC": 1.0
+          },
+          {
+            "chNum": 2,
+            "path": "/sensorlove/accel/y",
+            "dataType": 1,
+            "convertVals": 1,
+            "clipVals": 1,
+            "minV": 0.0,
+            "maxV": 10.0,
+            "minOSC": 0.0,
+            "maxOSC": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "plugin": "Fundamental",
+      "model": "Process",
+      "version": "2.6.4",
+      "params": [
+        {
+          "id": 0,
+          "value": -1.0
+        }
+      ],
+      "pos": [
+        26,
+        0
+      ]
+    },
+    {
+      "id": 3,
+      "plugin": "Fundamental",
+      "model": "Quantizer",
+      "version": "2.6.4",
+      "params": [],
+      "pos": [
+        31,
+        0
+      ],
+      "data": {
+        "enabledNotes": [
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          false,
+          true,
+          false,
+          true,
+          false,
+          false
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "plugin": "Fundamental",
+      "model": "VCO",
+      "version": "2.6.4",
+      "params": [],
+      "pos": [
+        34,
+        0
+      ]
+    },
+    {
+      "id": 5,
+      "plugin": "Fundamental",
+      "model": "Process",
+      "version": "2.6.4",
+      "params": [
+        {
+          "id": 0,
+          "value": -4.321928094887363
+        }
+      ],
+      "pos": [
+        43,
+        0
+      ]
+    },
+    {
+      "id": 6,
+      "plugin": "Fundamental",
+      "model": "VCA-1",
+      "version": "2.6.4",
+      "params": [],
+      "pos": [
+        48,
+        0
+      ]
+    },
+    {
+      "id": 7,
+      "plugin": "Core",
+      "model": "AudioInterface2",
+      "version": "2.6.6",
+      "params": [],
+      "pos": [
+        51,
+        0
+      ]
+    }
+  ],
+  "cables": [
+    {
+      "id": 1,
+      "outputModuleId": 1,
+      "outputId": 1,
+      "inputModuleId": 2,
+      "inputId": 1,
+      "color": "#f3374b"
+    },
+    {
+      "id": 2,
+      "outputModuleId": 2,
+      "outputId": 4,
+      "inputModuleId": 3,
+      "inputId": 0,
+      "color": "#ffb437"
+    },
+    {
+      "id": 3,
+      "outputModuleId": 3,
+      "outputId": 0,
+      "inputModuleId": 4,
+      "inputId": 0,
+      "color": "#00b56e"
+    },
+    {
+      "id": 4,
+      "outputModuleId": 1,
+      "outputId": 3,
+      "inputModuleId": 5,
+      "inputId": 1,
+      "color": "#3695ef"
+    },
+    {
+      "id": 5,
+      "outputModuleId": 5,
+      "outputId": 4,
+      "inputModuleId": 6,
+      "inputId": 0,
+      "color": "#8b4ade"
+    },
+    {
+      "id": 6,
+      "outputModuleId": 4,
+      "outputId": 0,
+      "inputModuleId": 6,
+      "inputId": 1,
+      "color": "#f3374b"
+    },
+    {
+      "id": 7,
+      "outputModuleId": 6,
+      "outputId": 0,
+      "inputModuleId": 7,
+      "inputId": 0,
+      "color": "#ffb437"
+    },
+    {
+      "id": 8,
+      "outputModuleId": 6,
+      "outputId": 0,
+      "inputModuleId": 7,
+      "inputId": 1,
+      "color": "#00b56e"
+    }
+  ]
+}
